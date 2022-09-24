@@ -2,37 +2,24 @@
 package com.bahra;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
-/*todo
-
-    -update 4 to read current student data
-    -write data function !!!double check
-    -read  data function
-    -user specify path for read function
-    -rename file to BahrReadingWriting01
-    -reset default student data
-    -spruce up comments
-
-
-
- */
-public class BahrHandlingInput{
-
-    private String studentName;// "AB" default = ""
-    private String studentYear; //"Freshman"; = ""
-    private Double studentGPA; //3.0; = -1.0
-
+public class BahrReadingWriting01 {
+    private String studentName;//default = ""
+    private String studentYear; // = ""
+    private Double studentGPA; // = -1.0
     public File defaultPath = new File("schoolData.csv");
-
-    public BahrHandlingInput(String studentName, String studentYear, Double studentGPA){
+    public BahrReadingWriting01(String studentName, String studentYear, Double studentGPA){
+        //constructor to set default values on initialization
         this.setStudentName(studentName);
         this.setStudentYear(studentYear);
         this.setStudentGPA(studentGPA);
     }
+    /*
+    Below is Getters and Setters for the private data
+    I didn't need to do it this way, but I implemented it early and never changed it
+     */
     public String getStudentName() {
         return studentName;
     }
@@ -93,62 +80,58 @@ public class BahrHandlingInput{
         String csvData = getStudentName() + "," + getStudentYear() + "," + getStudentGPA().toString() + "\n"; //Gather data for writing
         try {
             if(defaultPath.exists()){//Checks for existing file
-                System.out.println("File Exists! Appending the file...");
+                System.out.println("File Exists! Appending the file...");//checks for default file
             }else {
-                System.out.println("File Not Found! Creating the file...");
+                System.out.println("File Not Found! Creating the file...");//creates if not found
             }
-
-            FileWriter fileWriter = new FileWriter(defaultPath, true);
-            fileWriter.write(csvData);
-            fileWriter.flush();
-            fileWriter.close();
+            FileWriter fileWriter = new FileWriter(defaultPath, true);//append is true
+            fileWriter.write(csvData);//append the data at the path
+            fileWriter.flush();//clear
+            fileWriter.close();//close file
 
         } catch (Exception e) {
             System.out.println("File Incorrect!");
         }
     }
     public ArrayList<String> readFromFile(File path) {
-        ArrayList<String> StudentDatabase = new ArrayList<>();
+        ArrayList<String> StudentDatabase = new ArrayList<>();//new arraylist to store data
         try{
-            Scanner databaseReader = new Scanner(path);
-            while (databaseReader.hasNextLine()){
-                String[] currentLine = databaseReader.nextLine().split(",");
-                StudentDatabase.add(currentLine[0]);
-                StudentDatabase.add(currentLine[1]);
-                StudentDatabase.add(currentLine[2]);
+            Scanner databaseReader = new Scanner(path); //scanner to read data
+            while (databaseReader.hasNextLine()){ //if a next line exists loop
+                String[] currentLine = databaseReader.nextLine().split(","); //split the string by the commas (CSV)
+                StudentDatabase.add(currentLine[0]);//name
+                StudentDatabase.add(currentLine[1]);//year
+                StudentDatabase.add(currentLine[2]);//gpa (in string form)
             }
             System.out.println("Loaded Data Successfully");
         }catch(Exception e){
             System.out.println("Filepath Not Found!");
-            return null;
+            return null;//return no data if file not found
         }
         return StudentDatabase;
     }
-
     //process user input
     public static void main(String[] args) {
-        BahrHandlingInput instance = new BahrHandlingInput("", "", -1.0);// create an instance of the class
+        BahrReadingWriting01 instance = new BahrReadingWriting01("", "", -1.0);// create an instance of the class
         Scanner inputHandler = new Scanner(System.in);// create an input handler
         var menuSelection = 0;
         do{
             instance.printMenu();//print menu
             try{//check if number inserted is an Int
                 menuSelection = inputHandler.nextInt();
-            }catch(Exception ex){//clear the input handler
-                inputHandler.next();
+            }catch(Exception ex){
+                inputHandler.next();//clear the input handler
                 menuSelection = 0;
             }
-
             switch (menuSelection) {
-
                 case 1://Enter Students Name
-                    System.out.print("Enter Students Name: ");
-                    instance.setStudentName(inputHandler.next());
                     instance.clearScreen();
+                    System.out.print("Enter Students Name: ");
+                    instance.setStudentName(inputHandler.next());//set student name
                     break;
-
                 case 2://Enter Students Academic Year
                     boolean yearValid = false;
+                    instance.clearScreen();
                     do {
                         System.out.print("Enter Students Academic Year: ");
                         try {//check for freshman and such
@@ -163,61 +146,56 @@ public class BahrHandlingInput{
                         }
                     } while (!yearValid);
                     break;
-
                 case 3://Enter Students GPA
                     boolean gpaValid = false;
+                    instance.clearScreen();
                     do {
                         System.out.print("Enter Students GPA: ");
                         try {//check for gpa bounds
-                            instance.setStudentGPA(inputHandler.nextDouble());
+                            instance.setStudentGPA(inputHandler.nextDouble());//set gpa
                             instance.clearScreen();
-                            gpaValid = instance.validateStudentGPA(instance.getStudentGPA());
+                            gpaValid = instance.validateStudentGPA(instance.getStudentGPA());//check if valid
                             if (!gpaValid) System.out.println("Please enter a decimal between 0.0 and 4.0!");
                         } catch (Exception ex) {
-                            System.out.println("Please enter a decimal between 0.0 and 4.0!");
+                            System.out.println("Please enter a decimal between 0.0 and 4.0!");//catch out of bounds and IOException
                             inputHandler.next();
                         }
                     } while (!gpaValid);
                     break;
-
-                case 4:
-                    
-                    instance.clearScreen();
-                    System.out.println("Printing Current Student");
+                case 4://print current student
+                    instance.clearScreen();//clear screen
+                    System.out.println("Printing Current Student!");
                     instance.printCompleteMenu(); //print complete menu
-
+                    break;
                 case 5://Write to file
+                    instance.clearScreen();
                     boolean isAnswered = instance.validateAllAnswered(); //check if all inputs are used
                     if (isAnswered){
-                        instance.writeToFile();
+                        instance.writeToFile();//call write file with current class data
                         System.out.println("Writing Data to File");
-                    }else {
+                    }else
                         System.out.println("Please enter all info into the selections before saving the student data!");
-                    }
-
                     break;
-
                 case 6://read from file
-                    System.out.println("Enter a filepath to read data");
-                    String userPath = inputHandler.next();
-                    File path = new File(userPath);                   
-                    ArrayList<String> StudentDatabase = instance.readFromFile(path);
-                    if (StudentDatabase != null){
-                        for (int i = 0; i < StudentDatabase.size(); i+=3) {
-                            System.out.println("Students Name: " + StudentDatabase.get(i));
+                    instance.clearScreen();
+                    System.out.println("Enter an Existing filepath to read data");
+                    System.out.println("The default file is schoolData.csv");
+                    String userPath = inputHandler.next();//user input for file path
+                    File path = new File(userPath);
+                    ArrayList<String> StudentDatabase = instance.readFromFile(path); //created ArrayList of the file data
+                    if (StudentDatabase != null){   //initially I wanted to use instances of the class in the list, so I could load data and keep it.but I got stuck many times
+                        for (int i = 0; i < StudentDatabase.size(); i+=3) {//iteration add to the amount of data because it's not stored in one element
+                            System.out.println("Students Name: " + StudentDatabase.get(i));//I wanted to use a tuple [String, String, Double] but java doesn't have native tuples
                             System.out.println("Students Academic Year: " + StudentDatabase.get(i+1));
                             System.out.println("Students GPA: " + StudentDatabase.get(i+2));
                         }
                     }
                     break;
-
                 case 7://Exiting
                     System.out.print("Exiting Program!");
                     break;
-
                 default://error handling
                     System.out.println("Please Enter a Selection Between 1 and 5!");
-
             }
         }while (menuSelection != 7);
     }
