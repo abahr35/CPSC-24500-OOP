@@ -1,4 +1,4 @@
-//Austin Bahr Homework 3 week 3
+//Homework 3 week 3
 package com.bahra;
 import java.io.File;
 import java.io.FileWriter;

@@ -1,4 +1,4 @@
-//Austin Bahr Homework 2
+//Homework 2
 package com.bahra;
 import java.util.Scanner;
 
