@@ -1,4 +1,4 @@
-//Austin Bahr Homework 2
+//Austin Bahr Homework 3 week 3
 package com.bahra;
 import java.io.File;
 import java.io.FileWriter;
@@ -58,7 +58,8 @@ public class BahrReadingWriting01 {
         clearScreen();
         System.out.println("Students Name: " + getStudentName());
         System.out.println("Students Academic Year: " + getStudentYear());
-        System.out.println("Students GPA: " + getStudentGPA());
+        if (getStudentGPA() == -1.0) System.out.println(" ");
+        else System.out.println("Students GPA: " + getStudentGPA());
     }
     public boolean validateAllAnswered(){
         //check if it's still default values
@@ -73,7 +74,6 @@ public class BahrReadingWriting01 {
         I chose not to cancel their input if the case was wrong because I wanted the program to flow better.
         so I ended up making the text lowercase then checking
         */
-        inputYear = inputYear.toLowerCase();//make input lowercase
         return inputYear.equals("freshman") || inputYear.equals("sophomore") || inputYear.equals("junior") || inputYear.equals("senior");// return true if matches
     }
     public void writeToFile(){
@@ -137,11 +137,12 @@ public class BahrReadingWriting01 {
                         try {//check for freshman and such
                             instance.setStudentYear(inputHandler.next());
                             instance.clearScreen();
+                            instance.setStudentYear(instance.getStudentYear().toLowerCase()); //set lowercase
                             yearValid = instance.validateStudentYear(instance.getStudentYear());
-                            if (!yearValid) System.out.println("Please enter Freshman, Sophomore, Junior, Senior");
-                            instance.setStudentYear(instance.getStudentYear().substring(0, 1).toUpperCase() + instance.getStudentYear().substring(1));//capitalize the first letter
+                            if (!yearValid) System.out.println("Please enter Freshman, Sophomore, Junior, or Senior");
+                            instance.setStudentYear(instance.getStudentYear().substring(0, 1).toUpperCase() + instance.getStudentYear().substring(1)); //capitalize the first letter for looks
                         } catch (Exception ex) {//if it's not an actual year pull them back
-                            System.out.println("Please enter Freshman, Sophomore, Junior, Senior");
+                            System.out.println("Please enter Freshman, Sophomore, Junior, or Senior");
                             inputHandler.next();
                         }
                     } while (!yearValid);
@@ -195,7 +196,7 @@ public class BahrReadingWriting01 {
                     System.out.print("Exiting Program!");
                     break;
                 default://error handling
-                    System.out.println("Please Enter a Selection Between 1 and 5!");
+                    System.out.println("Please Enter a Selection Between 1 and 7!");
             }
         }while (menuSelection != 7);
     }
